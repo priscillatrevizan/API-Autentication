@@ -55,7 +55,7 @@ function checkToken(req, res, next) {
 }
 
 //Register User
-app.post("/auth/register", async (req, res) => {
+app.post("/auth/signup", async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
   //Validations
@@ -74,7 +74,9 @@ app.post("/auth/register", async (req, res) => {
   const userExists = await User.findOne({ email: email });
 
   if (userExists) {
-    return res.status(400).json({ msg: "Por favor, utilize outro email!" });
+    return res
+      .status(400)
+      .json({ msg: "E-mail já cadastrado. Por favor, utilize outro email!" });
   }
 
   //create password
@@ -102,27 +104,25 @@ app.post("/auth/register", async (req, res) => {
 });
 
 //Login User
-app.post("/auth/login", async (req, res) => {
+app.post("/auth/signin", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(400)
-      .json({ msg: "Informe todos os campos corretamente" });
+    return res.status(400).json({ msg: "Login inválido" });
   }
 
   // Verificar se o usuário existe
   const user = await User.findOne({ email: email });
 
   if (!user) {
-    return res.status(404).json({ msg: "Usuário não encontrado!" });
+    return res.status(400).json({ msg: "Login inválido" });
   }
 
   // Verificar se a senha está correta
   const checkPassword = await bcrypt.compare(password, user.password);
 
   if (!checkPassword) {
-    return res.status(422).json({ msg: "Senha inválida" });
+    return res.status(400).json({ msg: "Login inválido" });
   }
 
   // Gerar token JWT
