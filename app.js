@@ -156,7 +156,7 @@ mongoose
     `mongodb+srv://${dbUser}:${dbPassword}@cluster0.8fucoyn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then(() => {
-    app.listen(3000);
     console.log("API Conectada ao BD com sucesso");
   })
   .catch((err) => console.log(err));
+app.listen(3000);
